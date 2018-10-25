@@ -65,7 +65,6 @@ return new Promise(async (resolve, reject) => {
   addon.cmdStartAsyncRecvMessages(listen);
 
   async function listen(rMessage) {
-    console.log(rMessage)
     rMessage = JSON.parse(rMessage);
     var sender = rMessage.sender;
     var vGroupID = rMessage.vgroupid;
@@ -158,7 +157,7 @@ return new Promise(async (resolve, reject) => {
       var msg = "File named: '" + rMessage.file.filename + "' successfully saved to directory!";
       var sMessage = addon.cmdSendRoomMessage(vGroupID, msg);
       var prevMessage = rMessage;
-      console.log('sMessage:', sMessage);
+      console.log(sMessage);
     } else {
       console.log(rMessage);
     }
