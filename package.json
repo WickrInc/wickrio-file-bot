@@ -1,5 +1,5 @@
 {
-  "name": "file_bot",
+  "name": "wickrio-file-bot",
   "version": "1.0.0",
   "description": "WickrIO File Bot",
   "main": "file_bot.js",
