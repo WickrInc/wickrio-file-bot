@@ -50,20 +50,26 @@ function sleep(ms) {
 }
 
 return new Promise(async (resolve, reject) => {
-  if (process.argv[2] === undefined) {
-    var client = fs.readFileSync('client_bot_username.txt', 'utf-8');
-    client = client.trim();
-    var response = await addon.clientInit(client);
-    resolve(response);
-  } else {
-    var response = await addon.clientInit(process.argv[2]);
-    resolve(response);
+  try {
+    if (process.argv[2] === undefined) {
+      var client = fs.readFileSync('client_bot_username.txt', 'utf-8');
+      client = client.trim();
+      var response = await addon.clientInit(client);
+      resolve(response);
+    } else {
+      var response = await addon.clientInit(process.argv[2]);
+      resolve(response);
+    }
+  } catch (err) {
+    return console.log(err);
   }
-
 }).then(async result => {
   console.log(result);
-  addon.cmdStartAsyncRecvMessages(listen);
-
+  try {
+    addon.cmdStartAsyncRecvMessages(listen);
+  } catch (err) {
+    return console.log(err);
+  }
   async function listen(rMessage) {
     rMessage = JSON.parse(rMessage);
     var sender = rMessage.sender;
