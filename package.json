@@ -1,6 +1,6 @@
 {
   "name": "wickrio-file-bot",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "WickrIO File Bot",
   "main": "file_bot.js",
   "dependencies": {
@@ -9,7 +9,7 @@
     "wickrio_addon": "^4.64.2"
   },
   "scripts": {
-    "start": "pm2 start file_bot.js",
+    "start": "pm2 start file_bot.js --update-env",
     "stop": "pm2 delete file_bot.js"
   },
   "repository": {
