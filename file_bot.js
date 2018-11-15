@@ -61,14 +61,16 @@ return new Promise(async (resolve, reject) => {
       resolve(response);
     }
   } catch (err) {
-    return console.log(err);
+    console.log(err);
+    process.exit();
   }
 }).then(async result => {
   console.log(result);
   try {
     addon.cmdStartAsyncRecvMessages(listen);
   } catch (err) {
-    return console.log(err);
+    console.log(err);
+    process.exit();
   }
   async function listen(rMessage) {
     rMessage = JSON.parse(rMessage);
