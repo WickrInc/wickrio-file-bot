@@ -6,24 +6,13 @@ module.exports = addon;
 process.stdin.resume(); //so the program will not close instantly
 
 function exitHandler(options, err) {
-  try {
-    if (err) {
-      console.log(err.stack);
-      addon.cmdStopAsyncRecvMessages();
-      console.log(addon.closeClient());
-      process.exit();
-    }
-    if (options.exit) {
-      addon.cmdStopAsyncRecvMessages();
-      console.log(addon.closeClient());
-      process.exit();
-    } else if (options.pid) {
-      addon.cmdStopAsyncRecvMessages();
-      console.log(addon.closeClient());
-      process.kill(process.pid);
-    }
-  } catch (err) {
-    console.log(err);
+  console.log(addon.cmdStopAsyncRecvMessages());
+  console.log(addon.closeClient());
+  if (err || options.exit) {
+    console.log('Exit Error:', err.stack);
+    process.exit();
+  } else if (options.pid) {
+    process.kill(process.pid);
   }
 }
 
@@ -54,10 +43,10 @@ return new Promise(async (resolve, reject) => {
     if (process.argv[2] === undefined) {
       var client = fs.readFileSync('client_bot_username.txt', 'utf-8');
       client = client.trim();
-      var response = await addon.clientInit(client);
+      var response = addon.clientInit(client);
       resolve(response);
     } else {
-      var response = await addon.clientInit(process.argv[2]);
+      var response = addon.clientInit(process.argv[2]);
       resolve(response);
     }
   } catch (err) {
@@ -123,7 +112,7 @@ return new Promise(async (resolve, reject) => {
           var attachment = argument;
           if (attachment === '*') {
             var msg = "Sorry, I'm not allowed to delete all the files in the directory.";
-            var sMessage = await addon.cmdSendRoomMessage(vGroupID, msg);
+            var sMessage = addon.cmdSendRoomMessage(vGroupID, msg);
             console.log(sMessage);
           }
           var os = fs.statSync('files/' + attachment);
@@ -133,7 +122,7 @@ return new Promise(async (resolve, reject) => {
           } else {
             var msg = attachment + ' does not exist!';
             console.error(msg);
-            var sMessage = await addon.cmdSendRoomMessage(vGroupID, msg);
+            var sMessage = addon.cmdSendRoomMessage(vGroupID, msg);
             console.log(sMessage);
           }
         }
@@ -147,7 +136,7 @@ return new Promise(async (resolve, reject) => {
             console.log(err);
           } else {
             console.log(err);
-            var sMessage = await addon.cmdSendRoomMessage(vGroupID, err);
+            var sMessage = addon.cmdSendRoomMessage(vGroupID, err);
             console.log(sMessage);
           }
         }
