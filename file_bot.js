@@ -1,13 +1,12 @@
-var addon = require('wickrio_addon');
+var WickrIOAPI = require('wickrio_addon');
 var fs = require('fs');
 
-process.title = "fileBot";
-module.exports = addon;
+module.exports = WickrIOAPI;
 process.stdin.resume(); //so the program will not close instantly
 
 function exitHandler(options, err) {
-  console.log(addon.cmdStopAsyncRecvMessages());
-  console.log(addon.closeClient());
+  console.log(WickrIOAPI.cmdStopAsyncRecvMessages());
+  console.log(WickrIOAPI.closeClient());
   if (err || options.exit) {
     console.log('Exit Error:', err.stack);
     process.exit();
@@ -43,10 +42,10 @@ return new Promise(async (resolve, reject) => {
     if (process.argv[2] === undefined) {
       var client = fs.readFileSync('client_bot_username.txt', 'utf-8');
       client = client.trim();
-      var response = addon.clientInit(client);
+      var response = WickrIOAPI.clientInit(client);
       resolve(response);
     } else {
-      var response = addon.clientInit(process.argv[2]);
+      var response = WickrIOAPI.clientInit(process.argv[2]);
       resolve(response);
     }
   } catch (err) {
@@ -56,7 +55,7 @@ return new Promise(async (resolve, reject) => {
 }).then(async result => {
   console.log(result);
   try {
-    addon.cmdStartAsyncRecvMessages(listen);
+    WickrIOAPI.cmdStartAsyncRecvMessages(listen);
   } catch (err) {
     console.log(err);
     process.exit();
@@ -87,16 +86,20 @@ return new Promise(async (resolve, reject) => {
         });
         fileArr = fileArr.join('\n');
         try {
-          var sMessage = addon.cmdSendRoomMessage(vGroupID, fileArr);
+          var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, fileArr);
           console.log(sMessage);
         } catch (err) {
           console.log(err);
         }
       } else if (command === '/get') {
         var attachment = argument;
+        if (attachment === '') {
+          var msg = "Command missing an argument. Proper format: /get FILE_NAME";
+          return WickrIOAPI.cmdSendRoomMessage(vGroupID, msg);
+        }
         try {
           var as = fs.accessSync('files/' + attachment, fs.constants.R_OK | fs.constants.W_OK);
-          var response = addon.cmdSendRoomAttachment(vGroupID, __dirname + '/files/' + attachment, attachment);
+          var response = WickrIOAPI.cmdSendRoomAttachment(vGroupID, __dirname + '/files/' + attachment, attachment);
           console.log(response)
         } catch (err) {
           if (err instanceof TypeError || err instanceof ReferenceError) {
@@ -104,16 +107,21 @@ return new Promise(async (resolve, reject) => {
           } else {
             var msg = attachment + ' does not exist!';
             console.error(msg);
-            return console.log(addon.cmdSendRoomMessage(vGroupID, msg));
+            return console.log(WickrIOAPI.cmdSendRoomMessage(vGroupID, msg));
           }
         }
       } else if (command === '/delete') {
         try {
           var attachment = argument;
+          if (attachment === '') {
+            var msg = "Command missing an argument. Proper format: /delete FILE_NAME";
+            return WickrIOAPI.cmdSendRoomMessage(vGroupID, msg);
+          }
           if (attachment === '*') {
             var msg = "Sorry, I'm not allowed to delete all the files in the directory.";
-            var sMessage = addon.cmdSendRoomMessage(vGroupID, msg);
+            var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, msg);
             console.log(sMessage);
+            return;
           }
           var os = fs.statSync('files/' + attachment);
         } catch (err) {
@@ -122,23 +130,20 @@ return new Promise(async (resolve, reject) => {
           } else {
             var msg = attachment + ' does not exist!';
             console.error(msg);
-            var sMessage = addon.cmdSendRoomMessage(vGroupID, msg);
+            var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, msg);
             console.log(sMessage);
+            return;
           }
         }
         try {
           var rm = fs.unlinkSync('files/' + attachment);
-          var msg = "File named: '" + attachment + "' was deleted successfully!";
-          var sMessage = addon.cmdSendRoomMessage(vGroupID, msg);
+          var msg = "File named: " + attachment + " was deleted successfully!";
+          var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, msg);
           console.log(sMessage);
         } catch (err) {
-          if (err instanceof TypeError || err instanceof ReferenceError) {
-            console.log(err);
-          } else {
-            console.log(err);
-            var sMessage = addon.cmdSendRoomMessage(vGroupID, err);
-            console.log(sMessage);
-          }
+          var msg = "Unable to delete file named: " + attachment;
+          var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, msg);
+          return console.log(err);
         }
 
       } else if (command === '/help') {
@@ -146,13 +151,13 @@ return new Promise(async (resolve, reject) => {
           "/list - Lists all available files\n" +
           "/get FILE_NAME - Retrieve the specified file\n" +
           "/delete FILE_NAME - Deletes the specified file\n";
-        var sMessage = addon.cmdSendRoomMessage(vGroupID, help);
+        var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, help);
         console.log(sMessage);
       }
     } else if (rMessage.file && JSON.stringify(rMessage) !== JSON.stringify(prevMessage)) {
       var cp = fs.copyFileSync(rMessage.file.localfilename.toString(), 'files/' + rMessage.file.filename.toString());
       var msg = "File named: '" + rMessage.file.filename + "' successfully saved to directory!";
-      var sMessage = addon.cmdSendRoomMessage(vGroupID, msg);
+      var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, msg);
       var prevMessage = rMessage;
       console.log(sMessage);
     } else {

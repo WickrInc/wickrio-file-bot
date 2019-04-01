@@ -9,8 +9,8 @@
     "wickrio_addon": "^5.12.4"
   },
   "scripts": {
-    "start": "pm2 start file_bot.js --update-env",
-    "stop": "pm2 delete file_bot.js"
+    "start": "pm2 start processes.json --update-env",
+    "stop": "pm2 delete processes.json"
   },
   "repository": {
     "type": "git",
