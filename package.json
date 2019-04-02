@@ -1,19 +1,21 @@
 {
   "name": "wickrio-file-bot",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "WickrIO File Bot",
   "main": "file_bot.js",
   "dependencies": {
     "pm2": "^3.4.1",
     "prompt": "^1.0.0",
-    "wickrio_addon": "^5.12.4"
+    "wickrio_addon": "^5.12.4",
+    "wickrio-bot-api": "^1.0.0"
   },
   "scripts": {
-    "start": "pm2 start file_bot.js --update-env",
-    "stop": "pm2 delete file_bot.js"
+    "start": "pm2 start processes.json --update-env",
+    "stop": "pm2 delete processes.json"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/WickrInc/wickrio-file-bot"
-  }
+  },
+  "database": false
 }
