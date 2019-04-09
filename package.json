@@ -1,6 +1,6 @@
 {
   "name": "wickrio-file-bot",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "WickrIO File Bot",
   "main": "file_bot.js",
   "dependencies": {
@@ -17,5 +17,15 @@
     "type": "git",
     "url": "https://github.com/WickrInc/wickrio-file-bot"
   },
+  "keywords": [
+    "wickr",
+    "wickrio",
+    "wickrbot",
+    "bot",
+    "bots",
+    "secure",
+    "messaging",
+    "api"
+  ],
   "database": false
 }
