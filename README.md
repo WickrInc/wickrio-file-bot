@@ -1,6 +1,6 @@
 # WickrIO File Bot
 
-Wickr's own File Manager Bot. Allows storing, removal and retrieving of files on the client.
+Wickr provides a sample integration that allows storing, removal and retrieval of files by a Wickr IO bot. Wickr users on the same network as the Wickr FileBot can interact with the bot to share files with each other.
 
 ## Description:
 * /help@botName - List all available commands
