@@ -108,6 +108,11 @@ async function listen(rMessage) {
         var msg = "Command missing an argument. Proper format: /get FILE_NAME";
         return WickrIOAPI.cmdSendRoomMessage(vGroupID, msg);
       }
+      if (! findFile(argument)) {
+        var msg = attachment + ' does not exist in the file directory';
+        console.error(msg);
+        return console.log(WickrIOAPI.cmdSendRoomMessage(vGroupID, msg));
+      }
       try {
         var as = fs.accessSync('files/' + attachment, fs.constants.R_OK | fs.constants.W_OK);
         var response = WickrIOAPI.cmdSendRoomAttachment(vGroupID, __dirname + '/files/' + attachment, attachment);
@@ -116,7 +121,7 @@ async function listen(rMessage) {
         if (err instanceof TypeError || err instanceof ReferenceError) {
           console.log(err);
         } else {
-          var msg = attachment + ' does not exist!';
+          var msg = attachment + ' does not exist in the file directory';
           console.error(msg);
           return console.log(WickrIOAPI.cmdSendRoomMessage(vGroupID, msg));
         }
@@ -134,12 +139,17 @@ async function listen(rMessage) {
           console.log(sMessage);
           return;
         }
+        if (! findFile(argument)) {
+          var msg = attachment + ' does not exist in the file directory';
+          console.error(msg);
+          return console.log(WickrIOAPI.cmdSendRoomMessage(vGroupID, msg));
+        }
         var os = fs.statSync('files/' + attachment);
       } catch (err) {
         if (err instanceof TypeError || err instanceof ReferenceError) {
           console.log(err);
         } else {
-          var msg = attachment + ' does not exist!';
+          var msg = attachment + ' does not exist in the file directory';
           console.error(msg);
           var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, msg);
           console.log(sMessage);
@@ -174,6 +184,20 @@ async function listen(rMessage) {
   } else {
     console.log(rMessage);
   }
+}
+
+function findFile(argument) {
+  var fileArr = [];
+  fs.readdirSync('files/').forEach(file => {
+    fileArr.push(file.toString());
+  });
+  var found = false;
+  for(file of fileArr){
+    if (file === argument) {
+      found = true;
+    }
+  }
+  return found;
 }
 
 main();
