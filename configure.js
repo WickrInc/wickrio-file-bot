@@ -50,8 +50,6 @@ async function main() {
         var newName = "WickrIO-File-Bot";
       }
 
-      console.log(newName);
-
       //var assign = Object.assign(dataParsed.apps[0].name, newName);
       dataParsed.apps[0].name = newName;
 
