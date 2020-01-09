@@ -18,11 +18,13 @@ if [ -z "$CLIENT_NAME" ]; then
     if [ ! -z "$input" ]
     then
       echo ${input} >client_bot_username.txt
+      WICKRIO_BOT_NAME=${input} node configure.js
     else
       echo "Cannot leave client bot's username empty! Please enter a value:"
     fi
   done
-  else
-    echo $CLIENT_NAME >client_bot_username.txt
+else
+  echo $CLIENT_NAME >client_bot_username.txt
+  WICKRIO_BOT_NAME=$CLIENT_NAME node configure.js
 fi
 
