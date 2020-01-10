@@ -13,4 +13,4 @@ cp -r files $NEW_FILEBOT_LOCATION
 cd ..
 mv wickrio-file-bot wickrio-file-bot.old_V$version
 cd $NEW_FILEBOT_LOCATION/..
-mv $NEW_FILEBOT_LOCATION file_bot
+mv $NEW_FILEBOT_LOCATION wickrio-file-bot
