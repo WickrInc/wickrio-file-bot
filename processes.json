@@ -3,18 +3,13 @@
     {
       "name": "WickrIO-File-Bot",
       "args": [],
-      "script": "node file_bot.js",
-      "exec_interpreter": "none",
+      "script": "./build/index.js",
+      "exec_interpreter": "node",
       "autorestart": true,
-      "watch": [
-        "package.json"
-      ],
-      "ignore_watch": [
-        ".git"
-      ],
+      "watch": ["package.json"],
+      "ignore_watch": [".git"],
       "env": {
-        "tokens": {
-        }
+        "tokens": {}
       },
       "out_file": "log.output",
       "error_file": "err.output"
