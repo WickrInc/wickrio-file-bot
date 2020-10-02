@@ -6,7 +6,8 @@
   "dependencies": {
     "pm2": "^3.5.1",
     "prompt": "^1.0.0",
-    "wickrio-bot-api": "5.64.x"
+    "wickrio-bot-api": "5.64.x",
+    "wickrio_addon": "^5.64.8"
   },
   "scripts": {
     "start": "pm2 start processes.json --update-env",
@@ -26,5 +27,14 @@
     "messaging",
     "api"
   ],
-  "database": false
+  "database": false,
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
+  }
 }
