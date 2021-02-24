@@ -10,6 +10,7 @@ old_version="$OLD_FILEBOT_LOCATION/VERSION"
 version=`cat "$old_version"`
 cd $OLD_FILEBOT_LOCATION
 cp -r files $NEW_FILEBOT_LOCATION
+cp client_bot_username.txt $NEW_FILEBOT_LOCATION
 cd ..
 mv wickrio-file-bot wickrio-file-bot.old_V$version
 cd $NEW_FILEBOT_LOCATION/..
