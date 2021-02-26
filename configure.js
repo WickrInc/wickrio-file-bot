@@ -1,15 +1,16 @@
 const fs = require('fs');
 const prompt = require('prompt');
+const { execSync } = require('child_process');
 const processes = require('./processes.json');
+
 const dataStringify = JSON.stringify(processes);
 const dataParsed = JSON.parse(dataStringify);
 
-const {exec, execSync, execFileSync} = require('child_process');
 prompt.colors = false;
 
-process.stdin.resume(); //so the program will not close instantly
+process.stdin.resume(); // so the program will not close instantly
 
-function exitHandler(options, err) {
+function exitHandler (options, err) {
   try {
     if (err) {
       process.kill(process.pid);
@@ -20,42 +21,43 @@ function exitHandler(options, err) {
     } else if (options.pid) {
       process.kill(process.pid);
     }
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
   }
 }
 
-//catches ctrl+c and stop.sh events
-process.on('SIGINT', exitHandler.bind(null, {exit: true}));
+// catches ctrl+c and stop.sh events
+process.on('SIGINT', exitHandler.bind(null, { exit: true }));
 
-//catches "kill pid" (for example: nodemon restart)
-process.on('SIGUSR1', exitHandler.bind(null, {pid: true}));
-process.on('SIGUSR2', exitHandler.bind(null, {pid: true}));
+// catches "kill pid" (for example: nodemon restart)
+process.on('SIGUSR1', exitHandler.bind(null, { pid: true }));
+process.on('SIGUSR2', exitHandler.bind(null, { pid: true }));
 
-//catches uncaught exceptions
+// catches uncaught exceptions
 process.on('uncaughtException', exitHandler.bind(null, {
   exit: true,
-  reason: 'uncaughtException'
+  reason: 'uncaughtException',
 }));
 
-main();
+async function main () {
+  try {
+    execSync('cp processes.json processes_backup.json');
+    let newName;
 
-async function main() {
-    try {
-      var cp = execSync('cp processes.json processes_backup.json');
-
-      if (process.env.WICKRIO_BOT_NAME !== undefined) {
-        var newName = "WickrIO-File-Bot_" + process.env.WICKRIO_BOT_NAME;
-      } else {
-        var newName = "WickrIO-File-Bot";
-      }
-
-      //var assign = Object.assign(dataParsed.apps[0].name, newName);
-      dataParsed.apps[0].name = newName;
-
-      var ps = fs.writeFileSync('./processes.json', JSON.stringify(dataParsed, null, 2));
-    } catch (err) {
-      console.log(err);
+    if (process.env.WICKRIO_BOT_NAME !== undefined) {
+      newName = `WickrIO-File-Bot_${process.env.WICKRIO_BOT_NAME}`;
+    } else {
+      newName = 'WickrIO-File-Bot';
     }
-    process.exit();
+
+    // var assign = Object.assign(dataParsed.apps[0].name, newName);
+    dataParsed.apps[0].name = newName;
+
+    fs.writeFileSync('./processes.json', JSON.stringify(dataParsed, null, 2));
+  } catch (err) {
+    console.log(err);
+  }
+  process.exit();
 }
+
+main();
