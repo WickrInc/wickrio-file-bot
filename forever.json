@@ -1,0 +1,10 @@
+{
+  "uid": "wickrio-file-bot",
+  "append": true,
+  "watch": false,
+  "script": "./file_bot.js",
+  "sourceDir": "",
+  "logFile": "",
+  "outFile": "",
+  "errFile": ""
+}

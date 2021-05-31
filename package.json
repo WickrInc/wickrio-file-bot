@@ -1,16 +1,16 @@
 {
   "name": "wickrio-file-bot",
-  "version": "5.76.1",
+  "version": "5.82.1",
   "description": "WickrIO File Bot",
   "main": "file_bot.js",
   "dependencies": {
-    "pm2": "^4.5.5",
     "prompt": "^1.0.0",
-    "wickrio-bot-api": "5.76.x"
+    "wickrio-bot-api": "5.82.x"
   },
   "scripts": {
-    "start": "pm2 start processes.json --update-env",
-    "stop": "pm2 delete processes.json"
+    "start": "/etc/init.d/mysql start && forever start -m 1 ./forever.json",
+    "stop": "forever stopall",
+    "restart": "forever restartall"
   },
   "repository": {
     "type": "git",
