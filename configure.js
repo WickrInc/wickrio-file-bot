@@ -1,11 +1,12 @@
-const fs = require('fs');
-const prompt = require('prompt');
-const processes = require('./processes.json');
-const dataStringify = JSON.stringify(processes);
-const dataParsed = JSON.parse(dataStringify);
+const WickrIOBotAPI = require('wickrio-bot-api')
 
 const {exec, execSync, execFileSync} = require('child_process');
-prompt.colors = false;
+
+require('dotenv').config({
+  path: '.env.configure',
+})
+
+let wickrIOConfigure
 
 process.stdin.resume(); //so the program will not close instantly
 
@@ -41,21 +42,15 @@ process.on('uncaughtException', exitHandler.bind(null, {
 main();
 
 async function main() {
-    try {
-      var cp = execSync('cp processes.json processes_backup.json');
+  const tokens = require('./configTokens.json')
+  const fullName = process.cwd() + '/processes.json'
+  wickrIOConfigure = new WickrIOBotAPI.WickrIOConfigure(
+    tokens.tokens,
+    fullName,
+    tokens.supportAdministrators,
+    tokens.supportVerification
+  )
 
-      if (process.env.WICKRIO_BOT_NAME !== undefined) {
-        var newName = "WickrIO-File-Bot_" + process.env.WICKRIO_BOT_NAME;
-      } else {
-        var newName = "WickrIO-File-Bot";
-      }
-
-      //var assign = Object.assign(dataParsed.apps[0].name, newName);
-      dataParsed.apps[0].name = newName;
-
-      var ps = fs.writeFileSync('./processes.json', JSON.stringify(dataParsed, null, 2));
-    } catch (err) {
-      console.log(err);
-    }
-    process.exit();
+  await wickrIOConfigure.configureYourBot(tokens.integration)
+  process.exit()
 }
