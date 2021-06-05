@@ -88,45 +88,137 @@ async function listen(rMessage) {
         argument = parsedData[4];
       }
     }
+    /*
+     * LIST Command
+     */
     if (command === '/list') {
-      var fileArr = [];
-      fileArr.push('List of files in the given directory:');
-      var answer;
+      const header = 'List of files in the given directory:'
+      let messagemeta = {
+        table: {
+          name: header,
+          firstcolname: 'File',
+          actioncolname: 'Select',
+          rows: [],
+        },
+        textcut: []
+      }
+      let fileArr = [];
+      fileArr.push(header);
       fs.readdirSync('files/').forEach(file => {
-        fileArr.push(file.toString());
+        const fileName = file.toString()
+        fileArr.push(fileName);
+
+        // Create entry in table
+        const row = {
+          firstcolvalue: fileName,
+          response: fileName,
+        }
+        messagemeta.table.rows.push(row)
       });
-      fileArr = fileArr.join('\n');
+
+      // Generate the string to send
+      const msg2send = fileArr.join('\n');
+      if (messagemeta.table.rows.length > 0) {
+        const textcut = {
+          startindex: header.length,
+          endindex: msg2send.length,
+        }
+        messagemeta.textcut.push(textcut)
+      }
+      const messagemetastring = JSON.stringify(messagemeta)
+      console.log('messageMetaString=', messagemetastring)
+
       try {
-        var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, fileArr);
+        var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, msg2send, "", "", "", [], messagemetastring);
         console.log(sMessage);
       } catch (err) {
         console.log(err);
       }
-    } else if (command === '/get') {
+    }
+    /*
+     * GET Command
+     */
+    else if (command === '/get') {
       var attachment = argument;
       if (attachment === '') {
-        var msg = "Command missing an argument. Proper format: /get FILE_NAME";
-        return WickrIOAPI.cmdSendRoomMessage(vGroupID, msg);
-      }
-      if (! findFile(argument)) {
-        var msg = attachment + ' does not exist in the file directory';
-        console.error(msg);
-        return console.log(WickrIOAPI.cmdSendRoomMessage(vGroupID, msg));
-      }
-      try {
-        var as = fs.accessSync('files/' + attachment, fs.constants.R_OK | fs.constants.W_OK);
-        var response = WickrIOAPI.cmdSendRoomAttachment(vGroupID, __dirname + '/files/' + attachment, attachment);
-        console.log(response)
-      } catch (err) {
-        if (err instanceof TypeError || err instanceof ReferenceError) {
-          console.log(err);
+//        var msg = "Command missing an argument. Proper format: /get FILE_NAME";
+//        return WickrIOAPI.cmdSendRoomMessage(vGroupID, msg);
+
+
+        const header = 'These are the files you can /get:'
+        let messagemeta = {
+          table: {
+            name: header,
+            firstcolname: 'File',
+            actioncolname: 'Select',
+            rows: [],
+          },
+          textcut: []
+        }
+        let fileArr = [];
+        fileArr.push(header);
+        fs.readdirSync('files/').forEach(file => {
+          const fileName = file.toString()
+          fileArr.push(fileName);
+
+          // Create entry in table
+          const row = {
+            firstcolvalue: fileName,
+            response: '/get ' + fileName,
+          }
+          messagemeta.table.rows.push(row)
+        });
+
+        // Generate the string to send
+        const msg2send = fileArr.join('\n');
+        if (messagemeta.table.rows.length === 0) {
+          try {
+            var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, "There are no files available");
+            console.log(sMessage);
+          } catch (err) {
+            console.log(err);
+          }
         } else {
+          const textcut = {
+            startindex: header.length,
+            endindex: msg2send.length,
+          }
+          messagemeta.textcut.push(textcut)
+          const messagemetastring = JSON.stringify(messagemeta)
+          console.log('messageMetaString=', messagemetastring)
+
+          try {
+            var sMessage = WickrIOAPI.cmdSendRoomMessage(vGroupID, msg2send, "", "", "", [], messagemetastring);
+            console.log(sMessage);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      } else {
+        if (! findFile(argument)) {
           var msg = attachment + ' does not exist in the file directory';
           console.error(msg);
           return console.log(WickrIOAPI.cmdSendRoomMessage(vGroupID, msg));
         }
+        try {
+          var as = fs.accessSync('files/' + attachment, fs.constants.R_OK | fs.constants.W_OK);
+          var response = WickrIOAPI.cmdSendRoomAttachment(vGroupID, __dirname + '/files/' + attachment, attachment);
+          console.log(response)
+        } catch (err) {
+          if (err instanceof TypeError || err instanceof ReferenceError) {
+            console.log(err);
+          } else {
+            var msg = attachment + ' does not exist in the file directory';
+            console.error(msg);
+            return console.log(WickrIOAPI.cmdSendRoomMessage(vGroupID, msg));
+          }
+        }
       }
-    } else if (command === '/delete') {
+    }
+    /*
+     * DELETE Command
+     */
+    else if (command === '/delete') {
       try {
         var attachment = argument;
         if (attachment === '') {
@@ -167,7 +259,11 @@ async function listen(rMessage) {
         return console.log(err);
       }
 
-    } else if (command === '/help') {
+    }
+    /*
+     * DELETE Command
+     */
+    else if (command === '/help') {
       var help = "/help - List all available commands\n" +
         "/list - Lists all available files\n" +
         "/get FILE_NAME - Retrieve the specified file\n" +
