@@ -25,5 +25,6 @@ if [ -z "$CLIENT_NAME" ];
 then
   node configure.js
 else
+  echo $CLIENT_NAME >client_bot_username.txt
   WICKRIO_BOT_NAME=$CLIENT_NAME node configure.js
 fi
