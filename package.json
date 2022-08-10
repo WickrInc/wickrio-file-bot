@@ -1,6 +1,6 @@
 {
   "name": "wickrio-file-bot",
-  "version": "5.98.1",
+  "version": "5.113.1",
   "description": "WickrIO File Bot",
   "main": "file_bot.js",
   "dependencies": {
