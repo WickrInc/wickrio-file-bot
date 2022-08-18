@@ -1,12 +1,12 @@
 {
   "name": "wickrio-file-bot",
-  "version": "5.98.1",
+  "version": "5.113.1",
   "description": "WickrIO File Bot",
   "main": "file_bot.js",
   "dependencies": {
     "dotenv": "^8.2.0",
     "prompt": "^1.0.0",
-    "wickrio-bot-api": "5.96.x"
+    "wickrio-bot-api": "5.113.x"
   },
   "scripts": {
     "start": "forever start -m 5 ./forever.json",
