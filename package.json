@@ -1,12 +1,12 @@
 {
   "name": "wickrio-file-bot",
-  "version": "6.8.3",
+  "version": "6.26.1",
   "description": "WickrIO File Bot",
   "main": "file_bot.js",
   "dependencies": {
     "dotenv": "^8.2.0",
     "prompt": "^1.0.0",
-    "wickrio-bot-api": "6.8.x"
+    "wickrio-bot-api": "6.26.x"
   },
   "scripts": {
     "start": "nohup wpm2 start --no-metrics ./wpm.json >>wpm2.output 2>&1 & echo $! > $(cat pidLocation.json)",
